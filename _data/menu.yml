@@ -2,5 +2,8 @@ entries:
   - title: mind map
     url: mindmap.html
 
-- title: about
+  - title: all posts
+    url: archive.html
+
+  - title: about
     url: about.html
