@@ -2,12 +2,5 @@ entries:
   - title: mind map
     url: mindmap.html
 
-  - title: all posts
-    post_list:
-      limit: 10
-      show_more: true
-      show_more_text: 더 보기...
-      show_more_url: archive.html
-
-  - title: about
+- title: about
     url: about.html
