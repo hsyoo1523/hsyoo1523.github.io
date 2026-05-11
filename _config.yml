@@ -1,0 +1,27 @@
+title: hsyoo1523
+author: hsyoo1523
+email: hs.yoo1523@gmail.com
+url: https://hsyoo1523.github.io
+baseurl: ""
+description: >
+  공부 기록 블로그
+
+permalink: /:slug.html
+
+favicon: "logo.png"
+
+remote_theme: riggraz/no-style-please
+
+theme_config:
+  appearance: "auto" # "light", "dark", "auto"
+  back_home_text: ".."
+  date_format: "%Y-%m-%d"
+  show_description: false
+  lowercase_titles: true
+
+sass:
+  style: compressed
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
