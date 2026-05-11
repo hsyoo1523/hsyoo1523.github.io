@@ -4,7 +4,7 @@ email: hs.yoo1523@gmail.com
 url: https://hsyoo1523.github.io
 baseurl: ""
 description: >
-  공부 기록 블로그
+  study & portfolio blog
 
 permalink: /:slug.html
 

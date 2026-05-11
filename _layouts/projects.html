@@ -6,7 +6,7 @@ layout: default
 
 <h1>{{ page.title }}</h1>
 
-<div id="repos"><p>로딩 중...</p></div>
+<div id="repos"><p>loading...</p></div>
 
 <script>
   fetch('https://api.github.com/users/hsyoo1523/repos?sort=updated&per_page=50')
@@ -15,7 +15,7 @@ layout: default
       const list = repos.filter(r => !r.fork && r.name !== 'hsyoo1523.github.io');
 
       if (list.length === 0) {
-        document.getElementById('repos').innerHTML = '<p>공개 레포지토리가 없어요.</p>';
+        document.getElementById('repos').innerHTML = '<p>no public repositories found.</p>';
         return;
       }
 
@@ -33,6 +33,6 @@ layout: default
         '</ul>';
     })
     .catch(() => {
-      document.getElementById('repos').innerHTML = '<p>GitHub API 호출에 실패했어요.</p>';
+      document.getElementById('repos').innerHTML = '<p>failed to fetch from GitHub API.</p>';
     });
 </script>
