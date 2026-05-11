@@ -5,5 +5,8 @@ entries:
   - title: all posts
     url: archive.html
 
+  - title: projects
+    url: projects.html
+
   - title: about
     url: about.html

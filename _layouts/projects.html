@@ -1,0 +1,38 @@
+---
+layout: default
+---
+
+{%- include back_link.html -%}
+
+<h1>{{ page.title }}</h1>
+
+<div id="repos"><p>로딩 중...</p></div>
+
+<script>
+  fetch('https://api.github.com/users/hsyoo1523/repos?sort=updated&per_page=50')
+    .then(r => r.json())
+    .then(repos => {
+      const list = repos.filter(r => !r.fork && r.name !== 'hsyoo1523.github.io');
+
+      if (list.length === 0) {
+        document.getElementById('repos').innerHTML = '<p>공개 레포지토리가 없어요.</p>';
+        return;
+      }
+
+      document.getElementById('repos').innerHTML =
+        '<ul>' +
+        list.map(r => {
+          const meta = [r.language, r.stargazers_count > 0 ? '★ ' + r.stargazers_count : '']
+            .filter(Boolean).join(' · ');
+          return `<li>
+            <a href="${r.html_url}" target="_blank" rel="noopener">${r.name}</a>
+            ${r.description ? ' — ' + r.description : ''}
+            ${meta ? '<br><small>' + meta + '</small>' : ''}
+          </li>`;
+        }).join('') +
+        '</ul>';
+    })
+    .catch(() => {
+      document.getElementById('repos').innerHTML = '<p>GitHub API 호출에 실패했어요.</p>';
+    });
+</script>
