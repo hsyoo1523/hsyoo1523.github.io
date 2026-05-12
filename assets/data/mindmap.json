@@ -1,0 +1,45 @@
+{
+  "nodes": [
+    { "id": "root",          "label": "second brain",          "group": "root" },
+
+    { "id": "algorithm",     "label": "Algorithm",             "group": "algorithm" },
+    { "id": "dp",            "label": "DP",                    "group": "algorithm", "url": "/algorithm-dp.html" },
+    { "id": "graph-search",  "label": "Graph Search",          "group": "algorithm", "url": "/algorithm-graph.html" },
+    { "id": "sorting",       "label": "Sorting",               "group": "algorithm", "url": "/algorithm-sort.html" },
+
+    { "id": "webdev",        "label": "Web Dev",               "group": "web" },
+    { "id": "html-css",      "label": "HTML / CSS",            "group": "web",       "url": "/web-html-css.html" },
+    { "id": "javascript",    "label": "JavaScript",            "group": "web",       "url": "/web-js.html" },
+    { "id": "react",         "label": "React",                 "group": "web",       "url": "/web-react.html" },
+
+    { "id": "cs",            "label": "CS Fundamentals",       "group": "cs" },
+    { "id": "os",            "label": "Operating Systems",     "group": "cs",        "url": "/cs-os.html" },
+    { "id": "network",       "label": "Network",               "group": "cs",        "url": "/cs-network.html" },
+    { "id": "db",            "label": "Database",              "group": "cs",        "url": "/cs-db.html" },
+
+    { "id": "math",          "label": "Math",                  "group": "math" },
+    { "id": "linear-algebra","label": "Linear Algebra",        "group": "math",      "url": "/math-linear.html" },
+    { "id": "stats",         "label": "Probability & Stats",   "group": "math",      "url": "/math-stats.html" }
+  ],
+  "links": [
+    { "source": "root",      "target": "algorithm",    "type": "hierarchy" },
+    { "source": "root",      "target": "webdev",       "type": "hierarchy" },
+    { "source": "root",      "target": "cs",           "type": "hierarchy" },
+    { "source": "root",      "target": "math",         "type": "hierarchy" },
+
+    { "source": "algorithm", "target": "dp",           "type": "hierarchy" },
+    { "source": "algorithm", "target": "graph-search", "type": "hierarchy" },
+    { "source": "algorithm", "target": "sorting",      "type": "hierarchy" },
+
+    { "source": "webdev",    "target": "html-css",     "type": "hierarchy" },
+    { "source": "webdev",    "target": "javascript",   "type": "hierarchy" },
+    { "source": "webdev",    "target": "react",        "type": "hierarchy" },
+
+    { "source": "cs",        "target": "os",           "type": "hierarchy" },
+    { "source": "cs",        "target": "network",      "type": "hierarchy" },
+    { "source": "cs",        "target": "db",           "type": "hierarchy" },
+
+    { "source": "math",      "target": "linear-algebra","type": "hierarchy" },
+    { "source": "math",      "target": "stats",        "type": "hierarchy" }
+  ]
+}

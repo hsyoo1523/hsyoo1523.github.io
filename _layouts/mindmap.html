@@ -1,26 +1,130 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
   {%- include head.html -%}
   <style>
     body, html { margin: 0; padding: 0; overflow: hidden; }
-    .markmap { width: 100vw; height: 100vh; }
+    #graph { display: block; width: 100vw; height: 100vh; }
     #back {
-      position: fixed;
-      top: 14px; left: 18px;
-      z-index: 999;
-      font-size: 13px;
-      opacity: 0.5;
-      transition: opacity 0.2s;
+      position: fixed; top: 14px; left: 18px; z-index: 999;
+      font-family: monospace; font-size: 13px;
+      opacity: 0.35; transition: opacity 0.2s;
+      text-decoration: none; color: inherit;
     }
     #back:hover { opacity: 1; }
+    #hint {
+      position: fixed; bottom: 14px; left: 50%;
+      transform: translateX(-50%);
+      font-family: monospace; font-size: 11px;
+      opacity: 0.2; pointer-events: none; white-space: nowrap;
+    }
+    #legend {
+      position: fixed; bottom: 38px; right: 20px;
+      font-family: monospace; font-size: 11px; line-height: 2.2;
+      opacity: 0.45;
+    }
   </style>
-  <body a="{{ site.theme_config.appearance | default: "auto" }}">
+  <body a="light">
     <a id="back" href="{{ site.baseurl }}/">← home</a>
-    <div class="markmap">
-      <script type="text/template">
-{{ page.mindmap }}
-      </script>
+    <svg id="graph"></svg>
+    <div id="hint">scroll to zoom · drag to pan · click to open</div>
+    <div id="legend">
+      <div>
+        <svg width="24" height="12" style="vertical-align:middle;margin-right:6px">
+          <line x1="0" y1="6" x2="24" y2="6" stroke="#d1d5db" stroke-width="1.5"/>
+        </svg>hierarchy
+      </div>
+      <div>
+        <svg width="24" height="12" style="vertical-align:middle;margin-right:6px">
+          <line x1="0" y1="6" x2="24" y2="6" stroke="#818cf8" stroke-width="1.5" stroke-dasharray="5,3"/>
+        </svg>related
+      </div>
+      <div>
+        <svg width="24" height="12" style="vertical-align:middle;margin-right:6px">
+          <line x1="0" y1="6" x2="24" y2="6" stroke="#f87171" stroke-width="2.5"/>
+        </svg>strong
+      </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/markmap-autoloader@0.16"></script>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>
+    const GROUP_COLOR = {
+      root:      '#0f172a',
+      algorithm: '#3b82f6',
+      web:       '#10b981',
+      cs:        '#8b5cf6',
+      math:      '#f59e0b',
+    };
+
+    const LINK_STYLE = {
+      hierarchy: { color: '#d1d5db', width: 1.5, dash: null,  opacity: 0.6 },
+      related:   { color: '#818cf8', width: 1.5, dash: '5,3', opacity: 0.8 },
+      strong:    { color: '#f87171', width: 2.5, dash: null,  opacity: 0.8 },
+    };
+
+    function nodeR(d) {
+      if (d.group === 'root') return 28;
+      return d.url ? 10 : 18;
+    }
+
+    fetch('{{ site.baseurl }}/assets/data/mindmap.json')
+      .then(r => r.json())
+      .then(({ nodes, links }) => {
+        const W = innerWidth, H = innerHeight;
+        const svg = d3.select('#graph').attr('width', W).attr('height', H);
+        const g = svg.append('g');
+
+        svg.call(
+          d3.zoom().scaleExtent([0.1, 6])
+            .on('zoom', e => g.attr('transform', e.transform))
+        ).on('dblclick.zoom', null);
+
+        const sim = d3.forceSimulation(nodes)
+          .force('link', d3.forceLink(links).id(d => d.id)
+            .distance(d => d.type === 'hierarchy' ? 120 : 260)
+            .strength(d => d.type === 'hierarchy' ? 0.8 : 0.15))
+          .force('charge', d3.forceManyBody().strength(-450))
+          .force('center', d3.forceCenter(W / 2, H / 2))
+          .force('collide', d3.forceCollide().radius(d => nodeR(d) + 22));
+
+        const link = g.selectAll('.lk').data(links).join('line')
+          .attr('stroke',           d => LINK_STYLE[d.type]?.color   || '#ccc')
+          .attr('stroke-width',     d => LINK_STYLE[d.type]?.width   || 1.5)
+          .attr('stroke-opacity',   d => LINK_STYLE[d.type]?.opacity || 0.6)
+          .attr('stroke-dasharray', d => LINK_STYLE[d.type]?.dash    || null);
+
+        const node = g.selectAll('.nd').data(nodes).join('g')
+          .style('cursor', d => d.url ? 'pointer' : 'default')
+          .on('click', (_, d) => { if (d.url) location.href = d.url; })
+          .call(d3.drag()
+            .on('start', (e, d) => { if (!e.active) sim.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
+            .on('drag',  (e, d) => { d.fx = e.x; d.fy = e.y; })
+            .on('end',   (e, d) => { if (!e.active) sim.alphaTarget(0); d.fx = null; d.fy = null; })
+          );
+
+        node.append('circle')
+          .attr('r', nodeR)
+          .attr('fill',         d => (GROUP_COLOR[d.group] || '#888') + (d.url ? '44' : 'ff'))
+          .attr('stroke',       d => GROUP_COLOR[d.group] || '#888')
+          .attr('stroke-width', 2);
+
+        node.append('text')
+          .attr('dy',          d => nodeR(d) + 13)
+          .attr('text-anchor', 'middle')
+          .text(d => d.label)
+          .style('font-family',    'monospace')
+          .style('font-size',      d => d.group === 'root' ? '13px' : d.url ? '11px' : '12px')
+          .style('font-weight',    d => d.url ? '400' : '600')
+          .style('fill',           '#334155')
+          .style('pointer-events', 'none')
+          .style('user-select',    'none');
+
+        sim.on('tick', () => {
+          link
+            .attr('x1', d => d.source.x).attr('y1', d => d.source.y)
+            .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
+          node.attr('transform', d => `translate(${d.x},${d.y})`);
+        });
+      });
+    </script>
   </body>
 </html>
