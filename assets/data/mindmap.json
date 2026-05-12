@@ -1,18 +1,6 @@
 {
   "nodes": [
-    { "id": "dp",           "label": "DP",                   "url": "/algorithm-dp.html" },
-    { "id": "graph-search", "label": "Graph Search",         "url": "/algorithm-graph.html" },
-    { "id": "sorting",      "label": "Sorting",              "url": "/algorithm-sort.html" },
-    { "id": "html-css",     "label": "HTML / CSS",           "url": "/web-html-css.html" },
-    { "id": "javascript",   "label": "JavaScript",           "url": "/web-js.html" },
-    { "id": "react",        "label": "React",                "url": "/web-react.html" },
-    { "id": "os",           "label": "Operating Systems",    "url": "/cs-os.html" },
-    { "id": "network",      "label": "Network",              "url": "/cs-network.html" },
-    { "id": "db",           "label": "Database",             "url": "/cs-db.html" },
-    { "id": "linear-algebra","label": "Linear Algebra",      "url": "/math-linear.html" },
-    { "id": "stats",        "label": "Probability & Stats",  "url": "/math-stats.html" },
-
-    { "id": "ai-timetable", "label": "ai-timetable",          "url": "https://github.com/hsyoo1523/ai-timetable" }
+    { "id": "ai-timetable", "label": "ai-timetable", "url": "https://github.com/hsyoo1523/ai-timetable" }
   ],
   "links": [
   ]
